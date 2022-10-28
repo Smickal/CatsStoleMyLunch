@@ -59,27 +59,27 @@ public class Hand : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Mouse1))
-        {
-            activateThrow = !activateThrow;
-        }
+        //if(Input.GetKeyDown(KeyCode.Mouse1))
+        //{
+        //    activateThrow = !activateThrow;
+        //}
 
-        if (activateThrow)
-        {
-            AimAtMouse();
-            ThrowSandal();
-        }
-        else
-        {
-            ResetSandalPosition();
-            player.EnablePlayerMovement();
-        }
-        TurnOnOrOffAssistPoint();
+        //if (activateThrow)
+        //{
+        //    AimAtMouse();
+        //}
+        ThrowSandal();
+        //else
+        //{
+        //    ResetSandalPosition();
+        player.EnablePlayerMovement();
+        //}
+        //TurnOnOrOffAssistPoint();
 
-        for (int i = 0; i < points.Length; i++)
-        {
-            points[i].transform.position = PointPosition(i * rangeOfPoints);
-        }
+        //for (int i = 0; i < points.Length; i++)
+        //{
+        //    points[i].transform.position = PointPosition(i * rangeOfPoints);
+        //}
 
         if(!isCooldownOver)
         {
@@ -114,39 +114,64 @@ public class Hand : MonoBehaviour
         transform.right = dir;
     }
 
+    //private void ThrowSandal()
+    //{
+    //    if (Input.GetButtonDown("Fire1") && currentSandalSpawned < maxSandalSpawned && isCooldownOver)
+    //    {
+    //        isCooldownOver = false;
+                      
+    //        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+    //        Vector3 dir = mousePos - transform.position;
+    //        if (CheckIfPlayerDirAndThowDir(dir.x, playerDir.localScale.x))
+    //        {
+    //            sd.StartTimer(sandalCldwnTimer);
+
+    //            FindObjectOfType<AudioManager>().PlaySound("SandalThrow_SFX");
+
+    //            GameObject sandalIns = Instantiate(sandal, transform.position, transform.rotation);
+    //            sandalIns.GetComponent<Rigidbody2D>().velocity = transform.right * throwForce;
+    //            sandalIns.GetComponent<Sandal>().SetDamage(sandalDamage);
+
+    //            if (playerDir.localScale.x > 0)
+    //            {
+    //                sandalIns.GetComponent<Sandal>().rotationSpeed = -rotationSpeed;
+    //            }
+    //            else
+    //            {
+    //                sandalIns.GetComponent<Sandal>().rotationSpeed = rotationSpeed;
+    //            }
+
+    //            currentSandalSpawned++;
+    //            ammo--;
+    //        }
+    //    }
+    //}
+
+
     private void ThrowSandal()
     {
-        if (Input.GetButtonDown("Fire1") && currentSandalSpawned < maxSandalSpawned && isCooldownOver)
+        if (Input.GetMouseButtonDown(0) && isCooldownOver)
         {
+            sd.StartTimer(sandalCldwnTimer);
             isCooldownOver = false;
-                      
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector3 dir = mousePos - transform.position;
-            if (CheckIfPlayerDirAndThowDir(dir.x, playerDir.localScale.x))
+            GameObject sandalIns = Instantiate(sandal, transform.position, transform.rotation);
+            sandalIns.GetComponent<Sandal>().SetDamage(sandalDamage);
+
+            if (playerDir.localScale.x > 0)
             {
-                sd.StartTimer(sandalCldwnTimer);
-
-                FindObjectOfType<AudioManager>().PlaySound("SandalThrow_SFX");
-
-                GameObject sandalIns = Instantiate(sandal, transform.position, transform.rotation);
+                //sandalIns.GetComponent<Sandal>().rotationSpeed = -rotationSpeed;
                 sandalIns.GetComponent<Rigidbody2D>().velocity = transform.right * throwForce;
-                sandalIns.GetComponent<Sandal>().SetDamage(sandalDamage);
-
-                if (playerDir.localScale.x > 0)
-                {
-                    sandalIns.GetComponent<Sandal>().rotationSpeed = -rotationSpeed;
-                }
-                else
-                {
-                    sandalIns.GetComponent<Sandal>().rotationSpeed = rotationSpeed;
-                }
-
-                currentSandalSpawned++;
-                ammo--;
             }
+            else
+            {
+                //sandalIns.GetComponent<Sandal>().rotationSpeed = rotationSpeed;
+                sandalIns.GetComponent<Rigidbody2D>().velocity = transform.right * -throwForce;
+            }
+
+            currentSandalSpawned++;
+            ammo--;
         }
     }
-
     bool CheckIfPlayerDirAndThowDir(float mousePos, float playerDir)
     {
         if (mousePos > 0 && playerDir > 0 || mousePos < 0 && playerDir < 0)
